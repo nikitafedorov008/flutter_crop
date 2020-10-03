@@ -1,8 +1,9 @@
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gallery_saver/gallery_saver.dart';
 import 'package:image_cropper/image_cropper.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:image_picker_saver/image_picker_saver.dart';
 
 class PhotoPage extends StatefulWidget {
 
@@ -194,9 +195,16 @@ class _PhotoPage extends State<PhotoPage> {
     );
   }
 
+  _saveImage() async {
+    GallerySaver.saveImage(_image.path);
+    setState(() {
+      _image = null;
+    });
+  }
+
   _handleImage(ImageSource source) async {
     Navigator.pop(context);
-    File imageFile = await ImagePicker.pickImage(source: source);
+    File imageFile = await ImagePickerSaver.pickImage(source: source);
     if (imageFile != null) {
       imageFile = await _cropImage(imageFile);
       setState(() {
@@ -297,6 +305,10 @@ class _PhotoPage extends State<PhotoPage> {
                 ),
               ),
             ),
+          ),
+          MaterialButton(
+            child: Text('Save'),
+            onPressed: _saveImage,
           ),
         ],
       ),
